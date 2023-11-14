@@ -1,12 +1,3 @@
-/*=========================================================================================
-  File Name: main.js
-  Description: main vue(js) file
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
-
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -59,11 +50,31 @@ import 'prismjs/themes/prism-tomorrow.css'
 // Feather font icon
 require('./assets/css/iconfont.css')
 
+import BaiduMap from 'vue-baidu-map'
+
+Vue.use(BaiduMap, {
+  /* Visit http://lbsyun.baidu.com/apiconsole/key for details about app key. */
+  ak: 'eYVOGsHGjUgkZWkLviuxKALwCX0jAob7'
+})
 
 Vue.config.productionTip = false
-
 new Vue({
     router,
     store,
-    render: h => h(App)
+    render: h => h(App),
 }).$mount('#app')
+
+export function typeFilter(number) {
+  const typeMap = ['正常','密接','确诊']
+  return typeMap[number]
+}
+
+export function getTypeColor(num) {
+  const colorMap = ['success','warning','danger']
+  return colorMap[num]
+}
+
+export function sexFilter(num) {
+  const sexMap = ['男', '女']
+  return sexMap[num]
+}

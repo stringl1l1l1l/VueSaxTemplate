@@ -1,11 +1,3 @@
-/*=========================================================================================
-  File Name: mutations.js
-  Description: Vuex Store - mutations
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
 
 
 const mutations = {
@@ -90,6 +82,10 @@ const mutations = {
             state.starredPages.splice(10, 0, lastItemInStarredLimited);
         }
     },
+    UPDATE_CITY_DATA(state, list) {
+        state.cityData=list
+        console.log(state.cityData)
+    }
 }
 
 export default mutations

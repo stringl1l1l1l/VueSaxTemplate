@@ -1,11 +1,3 @@
-/*=========================================================================================
-  File Name: actions.js
-  Description: Vuex Store - actions
-  ----------------------------------------------------------------------------------------
-  Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-  Author: Pixinvent
-  Author URL: http://www.themeforest.net/user/pixinvent
-==========================================================================================*/
 
 
 const actions = {
@@ -50,6 +42,9 @@ const actions = {
     arrangeStarredPagesMore({ commit }, list) {
       commit('ARRANGE_STARRED_PAGES_MORE', list)
     },
+    updateCityData({ commit }, list) {
+      commit('UPDATE_CITY_DATA', list)
+    }
 }
 
 export default actions

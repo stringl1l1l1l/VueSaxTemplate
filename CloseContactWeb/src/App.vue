@@ -24,13 +24,14 @@ export default {
     }
   },
   async created() {
-    try {
-      await this.$auth.renewTokens();
-    } catch (e) {
-      console.log(e);
-    }
+    // try {
+    //   await removeToken();
+    // } catch (e) {
+    //   console.log(e);
+    // }
   },
   methods: {
+
     toggleClassInBody(className) {
       if (className == 'dark') {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark');

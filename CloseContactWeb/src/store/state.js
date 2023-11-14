@@ -33,9 +33,10 @@ const state = {
     starredPages: navbarSearchAndPinList.data.filter((page) => page.highlightAction),
     userRole: null,
 
-    // Can be used to get current window with
+    // Can be used to get current window width
     // Note: Above breakpoint state is for internal use of sidebar component
     windowWidth: null,
+    cityData:[]
 }
 
 export default state

@@ -9,9 +9,15 @@
 
 
 <template>
-    <div class="h-screen flex w-full bg-img vx-row no-gutter items-center justify-center" id="page-login">
+  <div>
+    <vx-card
+      content-color="#fff"
+      card-background="linear-gradient(120deg, #7f7fd5, #86a8e7, #91eae4)"
+    >
+    <div class="h-screen flex w-full  vx-row no-gutter items-center justify-center" id="page-login">
         <div class="vx-col sm:w-1/2 md:w-1/2 lg:w-3/4 xl:w-3/5 sm:m-0 m-4">
-            <vx-card>
+            <vx-card
+            >
                 <div slot="no-body" class="full-page-bg-color">
                     <div class="vx-row no-gutter justify-center items-center">
                         <div class="vx-col hidden lg:block lg:w-1/2">
@@ -20,15 +26,14 @@
                         <div class="vx-col sm:w-full md:w-full lg:w-1/2 d-theme-dark-bg">
                             <div class="p-8">
                                 <div class="vx-card__title mb-8">
-                                    <h4 class="mb-4">Login</h4>
-                                    <p>Welcome back, please login to your account.</p>
+                                    <h4 class="mb-4">欢迎登录</h4>
                                 </div>
                                 <vs-input
-                                    name="email"
+                                    name="username"
                                     icon="icon icon-user"
                                     icon-pack="feather"
-                                    label-placeholder="Email"
-                                    v-model="email"
+                                    label-placeholder="账号"
+                                    v-model="username"
                                     class="w-full no-icon-border"/>
 
                                 <vs-input
@@ -36,16 +41,16 @@
                                     name="password"
                                     icon="icon icon-lock"
                                     icon-pack="feather"
-                                    label-placeholder="Password"
+                                    label-placeholder="密码"
                                     v-model="password"
                                     class="w-full mt-6 no-icon-border" />
 
                                 <div class="flex flex-wrap justify-between my-5">
-                                    <vs-checkbox v-model="checkbox_remember_me" class="mb-3">Remember Me</vs-checkbox>
-                                    <router-link to="#">Forgot Password?</router-link>
+                                    <vs-checkbox v-model="checkbox_remember_me" class="mb-3">记住密码</vs-checkbox>
+                                    <router-link to="#">忘记密码?</router-link>
                                 </div>
-                                <vs-button  type="border">Register</vs-button>
-                                <vs-button class="float-right">Login</vs-button>
+                                <vs-button  type="border">注册</vs-button>
+                                <vs-button class="float-right" @click="login">登录</vs-button>
 
                                 <vs-divider>OR</vs-divider>
 
@@ -82,6 +87,8 @@
             </vx-card>
         </div>
     </div>
+    </vx-card>
+  </div>
 </template>
 
 <script>
@@ -89,11 +96,24 @@
 export default {
     data() {
         return {
-            email: '',
+            username: '',
             password: '',
             checkbox_remember_me: false
         }
-    }
+    },
+  methods: {
+    login() {
+      const payload = {
+        checkbox_remember_me: this.checkbox_remember_me,
+        userInfo: {
+          username: this.username,
+          password: this.password
+        },
+        notify: this.$vs.notify
+      }
+      this.$store.dispatch('user/login', payload);
+    },
+  }
 }
 </script>
 

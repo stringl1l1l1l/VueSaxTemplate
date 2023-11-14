@@ -1,17 +1,24 @@
-<!-- =========================================================================================
-    File Name: Main.vue
-    Description: Main layout
-    ----------------------------------------------------------------------------------------
-    Item Name: Vuesax Admin - VueJS Dashboard Admin Template
-    Author: Pixinvent
-    Author URL: http://www.themeforest.net/user/pixinvent
-========================================================================================== -->
-
 
 <template>
     <div class="layout--main" :class="[navbarClasses, footerClasses, {'app-page': isAppPage}]">
-
-        <vx-sidebar :sidebarItems="sidebarItems" :logo="require('@/assets/images/logo/logo.png')" title="Vuesax" parent=".layout--main" />
+      <the-customizer
+        @updateNavbar="updateNavbar"
+        @updateNavbarColor="updateNavbarColor"
+        :navbarType="navbarType"
+        :navbarColor="navbarColor"
+        :footerType="footerType"
+        @updateFooter="updateFooter"
+        :routerTransition="routerTransition"
+        @updateRouterTransition="updateRouterTransition"
+        v-if="!disableCustomizer"
+        :hideScrollToTop="hideScrollToTop"
+        @toggleHideScrollToTop="toggleHideScrollToTop"
+      />
+        <vx-sidebar
+          :sidebarItems="sidebarItems"
+          :logo="require('@/assets/images/logo/logo.png')"
+          title="密接者研判系统"
+          parent=".layout--main" />
 
         <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
 
@@ -19,7 +26,9 @@
 
             <div class="content-wrapper">
 
-                <the-navbar :navbarColor="navbarColor" :class="[{'text-white': isNavbarDark && !isThemeDark}, {'text-base': !isNavbarDark && isThemeDark}]" />
+                <the-navbar :navbarColor="navbarColor"
+                            :class="[{'text-white': isNavbarDark && !isThemeDark},
+                            {'text-base': !isNavbarDark && isThemeDark}]" />
 
                 <div class="router-view">
                     <div class="router-content" :class="{'mt-0': navbarType == 'hidden'}">
@@ -82,12 +91,13 @@
 
 <script>
 import VxSidebar from '@/layouts/components/vx-sidebar/VxSidebar.vue';
+import TheCustomizer from "../components/customizer/TheCustomizer.vue";
 import TheNavbar from '../components/TheNavbar.vue';
 import TheFooter from '../components/TheFooter.vue';
 import themeConfig from '@/../themeConfig.js';
 import sidebarItems from "@/layouts/components/vx-sidebar/sidebarItems.js";
 import BackToTop from 'vue-backtotop'
-
+const VxTour = () => import('@/components/VxTour.vue')
 export default {
     data() {
         return {
@@ -101,7 +111,39 @@ export default {
             disableCustomizer: themeConfig.disableCustomizer,
             windowWidth: window.innerWidth, //width of windows
             hideScrollToTop: themeConfig.hideScrollToTop,
-            disableThemeTour: themeConfig.disableThemeTour
+            disableThemeTour: themeConfig.disableThemeTour,
+            steps: [
+            {
+              target: '#btnSidebarToggler',
+              content: 'Toggle Collapse Sidebar.'
+            },
+            {
+              target: '.vx-navbar__starred-pages',
+              content: 'Create your own bookmarks. You can also re-arrange them using drag & drop.'
+            },
+            {
+              target: '.i18n-locale',
+              content: 'You can change language from here.'
+            },
+            {
+              target: '.navbar-fuzzy-search',
+              content: 'Try fuzzy search to visit pages in flash.'
+            },
+            {
+              target: '.customizer-btn',
+              content: 'Customize template based your preference',
+              params: {
+                placement: 'left'
+              }
+            },
+            {
+              target: '.vs-button.buy-now',
+              content: 'Buy this awesomeness at affordable price!',
+              params: {
+                placement: 'top'
+              }
+            },
+          ]
         }
     },
     watch: {
@@ -116,75 +158,87 @@ export default {
             }
         },
     },
-    computed: {
-        isAppPage() {
-            if(this.$route.path.includes('/apps/')) return true
-            else return false
-        },
-        isThemeDark() { return this.$store.state.theme == 'dark' },
-        sidebarWidth() {
-            return this.$store.state.sidebarWidth;
-        },
-        bodyOverlay() {
-            return this.$store.state.bodyOverlay;
-        },
-        contentAreaClass() {
-            if(this.sidebarWidth == "default") return "content-area-default"
-            else if(this.sidebarWidth == "reduced") return "content-area-reduced"
-            else if(this.sidebarWidth) return "content-area-full"
-        },
-        navbarClasses() {
-            return {
-                'navbar-hidden': this.navbarType == 'hidden',
-                'navbar-sticky': this.navbarType == 'sticky',
-                'navbar-static': this.navbarType == 'static',
-                'navbar-floating': this.navbarType == 'floating',
-            }
-        },
-        footerClasses() {
-            return {
-                'footer-hidden': this.footerType == 'hidden',
-                'footer-sticky': this.footerType == 'sticky',
-                'footer-static': this.footerType == 'static',
-            }
-        },
+  computed: {
+    isAppPage() {
+      if(this.$route.path.includes('/apps/')) return true
+      else return false
     },
-    methods: {
-        changeRouteTitle(title) {
-            this.routeTitle = title;
-        },
-        updateNavbarColor(val) {
-            this.navbarColor = val;
-            if(val == "#fff") this.isNavbarDark = false
-            else this.isNavbarDark = true
-        },
-        handleWindowResize(event) {
-            this.windowWidth = event.currentTarget.innerWidth;
-            this.setSidebarWidth();
-        },
-        setSidebarWidth() {
-            if (this.windowWidth < 1200) {
-                this.$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', false)
-                this.$store.dispatch('updateSidebarWidth', 'no-sidebar')
-                this.disableThemeTour = true;
-            }
-            else if(this.windowWidth < 1200) {
-                this.$store.dispatch('updateSidebarWidth', 'reduced')
-            }
-            else {
-                this.$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', true)
-            }
-        },
-        toggleHideScrollToTop(val) {
-            this.hideScrollToTop = val;
-        }
+    isThemeDark() { return this.$store.state.theme == 'dark' },
+    sidebarWidth() {
+      return this.$store.state.sidebarWidth;
     },
-    components: {
-        VxSidebar,
-        TheNavbar,
-        TheFooter,
-        BackToTop
+    bodyOverlay() {
+      return this.$store.state.bodyOverlay;
     },
+    contentAreaClass() {
+      if(this.sidebarWidth == "default") return "content-area-default"
+      else if(this.sidebarWidth == "reduced") return "content-area-reduced"
+      else if(this.sidebarWidth) return "content-area-full"
+    },
+    navbarClasses() {
+      return {
+        'navbar-hidden': this.navbarType == 'hidden',
+        'navbar-sticky': this.navbarType == 'sticky',
+        'navbar-static': this.navbarType == 'static',
+        'navbar-floating': this.navbarType == 'floating',
+      }
+    },
+    footerClasses() {
+      return {
+        'footer-hidden': this.footerType == 'hidden',
+        'footer-sticky': this.footerType == 'sticky',
+        'footer-static': this.footerType == 'static',
+      }
+    },
+  },
+  methods: {
+    changeRouteTitle(title) {
+      this.routeTitle = title;
+    },
+    updateNavbar(val) {
+      if(val == 'static') this.updateNavbarColor("#fff")
+      this.navbarType = val;
+    },
+    updateNavbarColor(val) {
+      this.navbarColor = val;
+      if(val == "#fff") this.isNavbarDark = false
+      else this.isNavbarDark = true
+    },
+    updateFooter(val) {
+      this.footerType = val;
+    },
+    updateRouterTransition(val) {
+      this.routerTransition = val;
+    },
+    handleWindowResize(event) {
+      this.windowWidth = event.currentTarget.innerWidth;
+      this.setSidebarWidth();
+    },
+    setSidebarWidth() {
+      if (this.windowWidth < 1200) {
+        this.$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', false)
+        this.$store.dispatch('updateSidebarWidth', 'no-sidebar')
+        this.disableThemeTour = true;
+      }
+      else if(this.windowWidth < 1200) {
+        this.$store.dispatch('updateSidebarWidth', 'reduced')
+      }
+      else {
+        this.$store.commit('TOGGLE_IS_SIDEBAR_ACTIVE', true)
+      }
+    },
+    toggleHideScrollToTop(val) {
+      this.hideScrollToTop = val;
+    }
+  },
+  components: {
+    VxSidebar,
+    TheNavbar,
+    TheFooter,
+    TheCustomizer,
+    BackToTop,
+    VxTour
+  },
     created() {
         this.setSidebarWidth();
         if(this.navbarColor == "#fff" && this.isThemeDark) {
